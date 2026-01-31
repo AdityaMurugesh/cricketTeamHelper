@@ -80,3 +80,51 @@ for bowler, bowler_df in phase_figures.groupby("bowler"):
     print(bowler_df[["phase", "overs", "runs", "wickets", "economy", "fours", "sixes"]])
 
 
+#Batting Analysis
+
+batting_stats = df_batting.groupby(['player'], as_index=False).agg(
+    total_runs = ('runs', 'sum'),
+    innings = ('match_id', 'nunique'), 
+    total_balls = ('balls', 'sum'),
+    fours = ('fours', 'sum'),
+    sixes = ('sixes', 'sum'),
+)
+
+batting_stats['strike_rate'] = (batting_stats['total_runs'] / batting_stats['total_balls'] * 100).round(2)
+batting_stats['average'] = (batting_stats['total_runs'] / batting_stats['innings']).round(2)
+batting_stats['boundary_runs'] = batting_stats['fours'] * 4 + batting_stats['sixes'] * 6
+
+total_runs = batting_stats['total_runs'].sum()
+
+batting_stats['run_percentage'] = ((batting_stats['total_runs'] / total_runs) * 100).round(2)
+
+batting_stats = batting_stats.sort_values(by=['total_runs', 'player'], ascending=[False, True]).reset_index(drop=True)
+
+print(
+    batting_stats[
+        ['player', 'total_runs', 'innings', 'total_balls',
+         'strike_rate', 'average', 'fours', 'sixes', 'boundary_runs', 'run_percentage']
+    ]
+)
+
+#Batting Position Analysis
+
+df_batting['batting_position'] = df_batting.groupby('match_id').cumcount() + 1
+
+batting_stats = df_batting.groupby(['player', 'batting_position'], as_index=False).agg(
+    total_runs=('runs', 'sum'),
+    innings=('match_id', 'nunique'),
+    total_balls=('balls', 'sum'),
+    fours=('fours', 'sum'),
+    sixes=('sixes', 'sum'),
+)
+
+batting_stats['strike_rate'] = (batting_stats['total_runs'] / batting_stats['total_balls'] * 100).round(2)
+batting_stats['average'] = (batting_stats['total_runs'] / batting_stats['innings']).round(2)
+batting_stats['boundary_runs'] = batting_stats['fours'] * 4 + batting_stats['sixes'] * 6
+
+for pos, pos_df in batting_stats.groupby('batting_position',sort=True):
+    print(f"\n=== Batting Position {pos} ===")
+    print(pos_df[['player','total_runs','innings','total_balls','strike_rate','average','fours','sixes','boundary_runs']].reset_index(drop=True))
+
+
