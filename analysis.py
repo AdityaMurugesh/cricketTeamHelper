@@ -93,6 +93,7 @@ batting_stats = df_batting.groupby(['player'], as_index=False).agg(
 batting_stats['strike_rate'] = (batting_stats['total_runs'] / batting_stats['total_balls'] * 100).round(2)
 batting_stats['average'] = (batting_stats['total_runs'] / batting_stats['innings']).round(2)
 batting_stats['boundary_runs'] = batting_stats['fours'] * 4 + batting_stats['sixes'] * 6
+batting_stats['boundary_percentage'] = ((batting_stats['boundary_runs'] / batting_stats['total_runs']) * 100).round(2)
 
 total_runs = batting_stats['total_runs'].sum()
 
@@ -103,7 +104,7 @@ batting_stats = batting_stats.sort_values(by=['total_runs', 'player'], ascending
 print(
     batting_stats[
         ['player', 'total_runs', 'innings', 'total_balls',
-         'strike_rate', 'average', 'fours', 'sixes', 'boundary_runs', 'run_percentage']
+         'strike_rate', 'average', 'fours', 'sixes', 'boundary_runs', 'run_percentage', 'boundary_percentage']
     ]
 )
 
@@ -126,5 +127,4 @@ batting_stats['boundary_runs'] = batting_stats['fours'] * 4 + batting_stats['six
 for pos, pos_df in batting_stats.groupby('batting_position',sort=True):
     print(f"\n=== Batting Position {pos} ===")
     print(pos_df[['player','total_runs','innings','total_balls','strike_rate','average','fours','sixes','boundary_runs']].reset_index(drop=True))
-
 
