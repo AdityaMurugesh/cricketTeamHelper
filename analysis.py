@@ -82,6 +82,8 @@ for bowler, bowler_df in phase_figures.groupby("bowler"):
 
 #Batting Analysis
 
+print("\nOverall Batting Statistics:")
+
 batting_stats = df_batting.groupby(['player'], as_index=False).agg(
     total_runs = ('runs', 'sum'),
     innings = ('match_id', 'nunique'), 
