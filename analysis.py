@@ -9,6 +9,10 @@ df_match_info = pd.read_excel(file, sheet_name=0)
 df_batting = pd.read_excel(file, sheet_name=1)
 df_bowling = pd.read_excel(file, sheet_name=2)
 
+
+
+
+
 #Calculating Bowler Figures
 
 figures = (
@@ -44,7 +48,7 @@ mergeddataset = selected.merge(df_match_info[['match_id', 'opponent']], on="matc
 for bowler, bowler_df in mergeddataset.groupby("bowler"):
     print("\nBowler:", bowler)
     bowler_df = bowler_df.reset_index(drop=True)
-    print(bowler_df[["opponent", "figure", "economy", "fours", "sixes"]])
+    print(bowler_df[["match_id", "opponent", "figure", "economy", "fours", "sixes"]])
 
 #Phase Setup
 
